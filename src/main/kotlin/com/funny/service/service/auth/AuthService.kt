@@ -1,7 +1,10 @@
 package com.funny.service.service.auth
 
+import com.funny.service.service.auth.dto.JwtAuthResponse
+import com.funny.service.service.auth.dto.SignInRequest
+import com.funny.service.service.auth.dto.SignUpRequest
+
 interface AuthService {
-    // https://habr.com/ru/articles/784508/
-    fun signUp()
-    fun signIn()
+    fun signUp(signUpRequest: SignUpRequest)
+    fun signIn(signInRequest: SignInRequest) : JwtAuthResponse
 }

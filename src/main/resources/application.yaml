@@ -3,3 +3,9 @@ spring:
     name: service
   profiles:
     active: ${APPLICATION_PROFILE:dev}
+
+jwt:
+  key: ${JWT_KEY:50861a2a1b08cd5f578facf25f0ad207831cafd0800ca9c761c7bf9b8e5510e3}
+  access-token-expiration: 3600000000000
+  refresh-token-expiration: 86400000
+

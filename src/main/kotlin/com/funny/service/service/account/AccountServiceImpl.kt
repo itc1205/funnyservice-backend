@@ -1,16 +1,25 @@
 package com.funny.service.service.account
 
+import com.funny.service.persistence.entity.Role
 import com.funny.service.persistence.repo.AccountRepository
 import com.funny.service.service.account.exception.AccountAlreadyExistsException
 import com.funny.service.service.account.exception.AccountNotFoundException
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AccountServiceImpl(val accountRepository: AccountRepository) : AccountService
+class AccountServiceImpl(
+    val accountRepository: AccountRepository
+) : AccountService
 {
     override fun getById(accountId: UUID): AccountDTO {
         val account = accountRepository.findById(accountId).orElseThrow { AccountNotFoundException() }
+        return account.toAccountDTO()
+    }
+
+    override fun getByLogin(login: String): AccountDTO {
+        val account = accountRepository.findByLogin(login).orElseThrow { AccountNotFoundException() }
         return account.toAccountDTO()
     }
 
@@ -40,5 +49,21 @@ class AccountServiceImpl(val accountRepository: AccountRepository) : AccountServ
         val accountEntity = accountRepository.findById(accountId).orElseThrow { AccountNotFoundException() }
         accountEntity.isOnline = online
         accountRepository.save(accountEntity)
+    }
+
+    override fun updateRole(accountId: UUID, role: Role) {
+        val accountEntity = accountRepository.findById(accountId).orElseThrow { AccountNotFoundException() }
+        accountEntity.role = role
+        accountRepository.save(accountEntity)
+    }
+
+    override fun updatePassword(accountId: UUID, password: String) {
+        val accountEntity = accountRepository.findById(accountId).orElseThrow { AccountNotFoundException() }
+        accountEntity.hashedPassword = password
+        accountRepository.save(accountEntity)
+    }
+
+    override fun userDetailsService(): UserDetailsService {
+        return UserDetailsService { username -> getByLogin(username) }
     }
 }

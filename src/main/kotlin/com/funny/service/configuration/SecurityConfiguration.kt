@@ -1,46 +1,74 @@
 package com.funny.service.configuration
 
 import com.funny.service.service.account.AccountService
-import com.funny.service.support.auth.JwtAuthFilter
+import com.funny.service.support.auth.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
+import org.springframework.security.authentication.AuthenticationManager
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
+
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 class SecurityConfiguration(
-    val jwtAuthFilter: JwtAuthFilter,
+    val jwtAuthFilter: JwtAuthenticationFilter,
     val accountService: AccountService
 ) {
     @Bean
-    fun securityFilterChain(httpSecurity: HttpSecurity) : SecurityFilterChain {
-        httpSecurity.csrf { abstractHttpConfigurer: AbstractHttpConfigurer<*, *> -> abstractHttpConfigurer.disable() }
-            .cors {
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        http.csrf { it.disable() }
+            .cors{
                 it.configurationSource {
                     val corsConfiguration = CorsConfiguration()
-                    corsConfiguration.setAllowedOriginPatterns(listOf("*"))
-                    corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                    corsConfiguration.allowedOriginPatterns = listOf("*")
+                    corsConfiguration.allowedMethods = listOf("*")
                     corsConfiguration.allowedHeaders = listOf("*")
                     corsConfiguration.allowCredentials = true
                     corsConfiguration
                 }
             }
             .authorizeHttpRequests {
-                it.requestMatchers("/auth/**").permitAll()
-                    .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated()
+                it.requestMatchers("/h2-console/**").permitAll()
+                it.requestMatchers("/api/v1/auth/**").permitAll()
+                it.requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+                it.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                it.anyRequest().authenticated()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .authenticationProvider(authe)
+            .headers { it ->
+                it.frameOptions {
+                    it.sameOrigin()
+                }
+            }
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter::class.java)
+
+        return http.build()
     }
+
+    @Bean
+    fun authenticationProvider() : AuthenticationProvider {
+        val authProvider = DaoAuthenticationProvider()
+        authProvider.setUserDetailsService(accountService.userDetailsService())
+        authProvider.setPasswordEncoder(passwordEncoder())
+        return authProvider
+    }
+    @Bean
+    fun passwordEncoder() : PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun authenticationManager(config: AuthenticationConfiguration) : AuthenticationManager =
+        config.authenticationManager
 }

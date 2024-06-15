@@ -5,15 +5,18 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.util.UUID
 
-@Entity(name = "launcher")
-data class LauncherEntity (
+@Entity
+@Table(name = "launcher")
+class LauncherEntity (
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: UUID?,
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
+    var id: UUID?,
     @Column(name = "file_id")
-    val fileId: UUID?,
+    var fileId: UUID?,
     @Column(name = "version")
-    val version: String
+    var version: String
 )
