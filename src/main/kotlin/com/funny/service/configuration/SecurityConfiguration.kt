@@ -38,11 +38,16 @@ class SecurityConfiguration(
                 }
             }
             .authorizeHttpRequests {
-                it.requestMatchers("/h2-console/**").permitAll()
-                it.requestMatchers("/api/v1/auth/**").permitAll()
-                it.requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
+//                it.requestMatchers("/h2-console/**").permitAll()
+//                it.requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                 it.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                it.anyRequest().authenticated()
+                it.requestMatchers("/api/v1/auth/**").permitAll()
+                it.requestMatchers("/api/v1/news/**").permitAll()
+                it.requestMatchers("/api/v1/commentary/fromSlug/*").permitAll()
+                it.requestMatchers("/api/v1/tag/list").permitAll()
+                it.requestMatchers("/api/v1/launcher/**").permitAll()
+                it.requestMatchers("/api/v1/**").authenticated()
+                it.anyRequest().permitAll()
             }
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -26,7 +26,7 @@ class AuthServiceImpl(
             hashedPassword = passwordEncoder.encode(signUpRequest.password),
             isOnline = false,
             status = "",
-            role = Role.USER
+            role = Role.ROLE_USER
         )
         accountService.createAccount(account)
     }

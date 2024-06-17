@@ -19,29 +19,32 @@ class NewsServiceImpl(
     private val tagRepository: TagRepository,
     private val accountRepository: AccountRepository
 ) : NewsService {
-    override fun createArticle(article: ArticleDTO, tags: Set<TagDTO>): UUID {
+    override fun createArticle(article: ArticleDTO, tags: List<TagDTO>, creatorId: UUID): UUID {
 
         val foundTags = tagRepository.findAllByName(tags.stream().map { it.name }.collect(Collectors.toSet()))
-        val creatorAccount = accountRepository.findById(article.creatorId).orElseThrow { AccountNotFoundException() }
+        val creatorAccount = accountRepository.findById(creatorId).orElseThrow { AccountNotFoundException() }
         val newArticle = ArticleEntity(
             id = null,
             createdBy = creatorAccount,
             body = article.body,
             tags = foundTags,
-            commentaries = mutableSetOf(),
+            commentaries = mutableListOf(),
             createdAt = LocalDateTime.now(),
             updatedAt = LocalDateTime.now(),
             title = article.title,
-            slug = generateSlug(article.title)
+            slug = generateSlug(this, article.title)
         )
         return articleRepository.save(newArticle).id!!
     }
 
-    override fun updateArticle(article: ArticleDTO) {
+    override fun updateArticle(article: ArticleDTO, tags: List<TagDTO>) {
         val foundArticle = articleRepository.findById(article.id!!).orElseThrow { ArticleNotFoundException() }
+
+        val foundTags = tagRepository.findAllByName(tags.stream().map { it.name }.collect(Collectors.toSet()))
 
         foundArticle.body = if (article.body != "") { article.body } else { foundArticle.body }
         foundArticle.title = if (article.title != "") { article.title } else { foundArticle.title }
+        foundArticle.tags = foundTags
 
         foundArticle.updatedAt = LocalDateTime.now()
         articleRepository.save(foundArticle)
@@ -66,13 +69,19 @@ class NewsServiceImpl(
         return articleRepository.findBySlug(slug).orElseThrow { ArticleNotFoundException() }.toArticleDTO()
     }
 
-    private fun generateSlug(title: String) : String {
+    private fun generateSlug(newsServiceImpl: NewsServiceImpl, title: String) : String {
+        val regex = Regex("/\\W+/g")
+
         var slug = title
             .lowercase()
             .trim()
-            .replace(' ', '-')
+            .replace(" ", "-")
+            .replace(",", "")
+            .replace(".", "")
+            .replace("!", "")
+            .trim()
 
-        val sameSlugCount = articleRepository.countBySlug(slug)
+        val sameSlugCount = newsServiceImpl.articleRepository.countBySlug(slug)
 
         if (sameSlugCount > 0) {
             slug = slug.plus("-$sameSlugCount")

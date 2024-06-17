@@ -8,9 +8,15 @@ import java.util.stream.Collectors
 class TagServiceImpl (
     private val tagRepository: TagRepository
 ) : TagService {
-    override fun findAllTags(tagNames: Set<String>): Set<TagDTO> {
+    override fun findAllTags(tagNames: Set<String>): List<TagDTO> {
         return tagRepository.findAllByName(tagNames).stream().map {
             it.toTagDTO()
-        }.collect(Collectors.toSet())
+        }.collect(Collectors.toList())
+    }
+
+    override fun getAllTags(): List<TagDTO> {
+        return tagRepository.findAll().stream().map {
+            it.toTagDTO()
+        }.collect(Collectors.toList())
     }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="001-create-article-table" author="Ivan Aksenov">
+        <createTable tableName="article">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="body" type="TEXT"/>
+            <column name="slug" type="VARCHAR(255)"/>
+            <column name="created_by_id" type="UUID">
+                <constraints foreignKeyName="fk_article_creator_id" nullable="false" references="account(id)"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

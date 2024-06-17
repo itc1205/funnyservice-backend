@@ -13,17 +13,14 @@
             <column name="hashed_password" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="online" type="BOOLEAN">
                 <constraints nullable="false"/>
             </column>
             <column name="role" type="VARCHAR(255)"/>
         </createTable>
-        <createTable tableName="article">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false" unique="true"/>
-            </column>
-            <column name="title" type="VARCHAR(255)">
-            </column>
-        </createTable>
+
     </changeSet>
 </databaseChangeLog>

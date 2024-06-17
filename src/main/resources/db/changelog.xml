@@ -2,5 +2,12 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <include file="changelog/000-initial-schema.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/000-create-account-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/001-create-article-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/002-create-commentary-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/003-create-launcher-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/004-create-tag-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/005-create-article-commentaries-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/006-create-article-tag-table.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/007-seed-database.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

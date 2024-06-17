@@ -7,5 +7,5 @@ import java.util.UUID
 
 interface TagRepository : JpaRepository<TagEntity, UUID> {
     @Query("SELECT tag FROM TagEntity tag WHERE tag.name IN :names")
-    fun findAllByName(names: Set<String>) : MutableSet<TagEntity>
+    fun findAllByName(names: Set<String>) : MutableList<TagEntity>
 }

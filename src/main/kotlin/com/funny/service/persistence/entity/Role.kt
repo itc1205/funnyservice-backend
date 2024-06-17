@@ -1,8 +1,8 @@
 package com.funny.service.persistence.entity
 
 enum class Role {
-    USER,
-    MODERATOR,
-    ADMIN,
-    CREATOR
+    ROLE_USER,
+    ROLE_MODERATOR,
+    ROLE_ADMIN,
+    ROLE_CREATOR
 }

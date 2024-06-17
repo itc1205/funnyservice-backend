@@ -6,12 +6,12 @@ import java.util.UUID
 
 data class ArticleDTO (
     val id: UUID?,
-    val creatorId: UUID,
+    val creatorId: UUID?,
     val title: String,
     val body: String,
     val slug: String?,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?
 )
 
 fun ArticleEntity.toArticleDTO() : ArticleDTO = ArticleDTO(

@@ -20,6 +20,11 @@ class TagController(
             it.toTagResponse()
         }.collect(Collectors.toSet())
     }
+
+    @GetMapping("/list")
+    fun getAllTags() : List<TagResponse> {
+        return tagService.getAllTags().stream().map { it.toTagResponse() }.toList()
+    }
 }
 
 

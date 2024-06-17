@@ -16,6 +16,7 @@ class ArticleEntity(
     @Column(name = "title")
     var title: String,
 
+    @Lob
     @Column(name = "body")
     var body: String,
 
@@ -24,11 +25,13 @@ class ArticleEntity(
 
     @ManyToMany(fetch = FetchType.LAZY)
     @BatchSize(size = 50)
-    var tags: MutableSet<TagEntity>,
+    @JoinTable(name = "article_tag", joinColumns = [JoinColumn(name="article_id")], inverseJoinColumns = [JoinColumn(name="tag_id")])
+    var tags: MutableList<TagEntity>,
 
     @OneToMany(fetch = FetchType.LAZY)
     @BatchSize(size = 50)
-    var commentaries: MutableSet<CommentaryEntity>,
+    @JoinTable(name = "article_commentary", joinColumns = [JoinColumn(name="article_id")], inverseJoinColumns = [JoinColumn(name="commentary_id")])
+    var commentaries: MutableList<CommentaryEntity>,
 
     @ManyToOne(fetch = FetchType.LAZY)
     var createdBy: AccountEntity,

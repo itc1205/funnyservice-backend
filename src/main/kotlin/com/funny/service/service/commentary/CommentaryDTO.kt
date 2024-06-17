@@ -9,8 +9,8 @@ data class CommentaryDTO (
     val creatorId: UUID,
     val articleId: UUID,
     val body: String,
-    val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime
+    val createdAt: LocalDateTime?,
+    val updatedAt: LocalDateTime?
 )
 fun CommentaryEntity.toCommentaryDTO() = CommentaryDTO(
     id,

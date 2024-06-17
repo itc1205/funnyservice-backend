@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="002-create-commentary-table" author="Ivan Aksenov">
+        <createTable tableName="commentary">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="body" type="VARCHAR(255)"/>
+            <column name="article_id" type="UUID">
+                <constraints foreignKeyName="fk_commentary_article_id" nullable="false" references="article(id)"/>
+            </column>
+            <column name="created_by_id" type="UUID">
+                <constraints foreignKeyName="fk_commentary_creator_id" nullable="false" references="account(id)"/>
+            </column>
+            <column name="created_at" type="DATETIME"/>
+            <column name="updated_at" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

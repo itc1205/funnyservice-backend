@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="006-create-article-tag-table" author="Ivan Aksenov">
+        <createTable tableName="article_tag">
+            <column name="article_id" type="UUID">
+                <constraints foreignKeyName="article_tag_article_id" references="article(id)"/>
+            </column>
+            <column name="tag_id" type="UUID">
+                <constraints foreignKeyName="article_tag_tag_id" references="tag(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
